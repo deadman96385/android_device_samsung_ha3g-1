@@ -36,20 +36,20 @@ vendor/firmware/bcm4335_V0093.0400.hcd
 lib/liboemcrypto.so
 
 # Camera
-#lib/hw/camera.universal5420.so:lib/hw/camera.vendor.universal5420.so
-#lib/libarccamera.so
-#lib/libarcsoft_night_shot.so
-#lib/libarcsoft_nighthawk.so
-#lib/libarcsoft_panorama_burstcapture.so
-#lib/libarcsoft_picaction.so
-#lib/libarcsoft_picaction_manual.so
-#lib/libarcsoft_selfie_camera_lite.so
-#lib/libarcsoft_sensorndk.so
-#lib/libarcsoft_vdoinvideo.so
-#lib/libexynoscamera.so
-#lib/libvdis.so
+lib/hw/camera.universal5420.so:lib/hw/camera.vendor.universal5420.so
+lib/libarccamera.so
+lib/libarcsoft_night_shot.so
+lib/libarcsoft_nighthawk.so
+lib/libarcsoft_panorama_burstcapture.so
+lib/libarcsoft_picaction.so
+lib/libarcsoft_picaction_manual.so
+lib/libarcsoft_selfie_camera_lite.so
+lib/libarcsoft_sensorndk.so
+lib/libarcsoft_vdoinvideo.so
+lib/libexynoscamera.so
+lib/libvdis.so
 # Camera Other 
-#lib/libliveframework.so
+lib/libliveframework.so
 
 # Widevine (DRM)
 bin/drmserver:bin/drmserver.samsung
@@ -67,7 +67,6 @@ lib/libcsc.so
 lib/libexynosgscaler.so
 lib/libexynosscaler.so
 lib/libexynosutils.so
-lib/libsomxaace.so
 lib/omx/libOMX.Exynos.AVC.Decoder.so
 lib/omx/libOMX.Exynos.AVC.Encoder.so
 lib/omx/libOMX.Exynos.MPEG4.Decoder.so
@@ -102,10 +101,9 @@ lib/libsomxwmv8d.so
 
 # Graphics
 vendor/lib/egl/libGLES_mali.so
-lib/egl/libGLES_android.so
-lib/egl/libsomxaace.so
 vendor/lib/libmalicore.bc
 vendor/lib/libRSDriverArm.so
+lib/egl/libsomxaace.so
 
 # GPS
 bin/gpsd
@@ -121,33 +119,6 @@ vendor/firmware/setfile_3L2.bin
 vendor/firmware/setfile_6b2.bin
 vendor/firmware/setfile_imx135.bin
 
-# MobiCore (not available in new stock)
-app/FFFFFFFF000000000000000000000001.drbin
-app/mcRegistry/00060308060501020000000000000000.tlbin
-app/mcRegistry/02010000080300030000000000000000.tlbin
-app/mcRegistry/07010000000000000000000000000000.tlbin
-app/mcRegistry/07060000000000000000000000000000.tlbin
-app/mcRegistry/ffffffff000000000000000000000003.tlbin
-app/mcRegistry/ffffffff000000000000000000000004.tlbin
-app/mcRegistry/ffffffff000000000000000000000005.tlbin
-app/mcRegistry/ffffffff000000000000000000000007.tlbin
-app/mcRegistry/ffffffff000000000000000000000008.tlbin
-app/mcRegistry/ffffffff000000000000000000000009.tlbin
-app/mcRegistry/ffffffff00000000000000000000000a.tlbin
-app/mcRegistry/ffffffff00000000000000000000000c.tlbin
-app/mcRegistry/ffffffff00000000000000000000000d.tlbin
-app/mcRegistry/ffffffff00000000000000000000000e.tlbin
-app/mcRegistry/ffffffff00000000000000000000000f.tlbin
-app/mcRegistry/ffffffff000000000000000000000010.tlbin
-app/mcRegistry/ffffffff000000000000000000000011.tlbin
-app/mcRegistry/ffffffff000000000000000000000012.tlbin
-app/mcRegistry/ffffffff000000000000000000000013.tlbin
-app/mcRegistry/ffffffff000000000000000000000017.tlbin
-app/mcRegistry/ffffffff000000000000000000000018.tlbin
-app/mcRegistry/ffffffffd00000000000000000000004.tlbin
-app/mcRegistry/ffffffffd0000000000000000000000a.tlbin
-app/mcRegistry/ffffffffd0000000000000000000000e.tlbin
-bin/scranton_RD
 
 # Sensors
 bin/sensorhubservice
@@ -158,6 +129,35 @@ lib/libsensirion_h_3.so
 lib/libsensorhub.so
 lib/libsensorhubservice.so
 
+# MobiCore (not available in new stock)
+app/FFFFFFFF000000000000000000000001.drbin:vendor/firmware/mcRegistry/FFFFFFFF000000000000000000000001.drbin
+app/mcRegistry/00060308060501020000000000000000.tlbin:vendor/firmware/mcRegistry/00060308060501020000000000000000.tlbin
+app/mcRegistry/02010000080300030000000000000000.tlbin:vendor/firmware/mcRegistry/02010000080300030000000000000000.tlbin
+app/mcRegistry/07010000000000000000000000000000.tlbin:vendor/firmware/mcRegistry/07010000000000000000000000000000.tlbin
+app/mcRegistry/07060000000000000000000000000000.tlbin:vendor/firmware/mcRegistry/07060000000000000000000000000000.tlbin
+app/mcRegistry/ffffffff000000000000000000000003.tlbin:vendor/firmware/mcRegistry/ffffffff000000000000000000000003.tlbin
+app/mcRegistry/ffffffff000000000000000000000004.tlbin:vendor/firmware/mcRegistry/ffffffff000000000000000000000004.tlbin
+app/mcRegistry/ffffffff000000000000000000000005.tlbin:vendor/firmware/mcRegistry/ffffffff000000000000000000000005.tlbin
+app/mcRegistry/ffffffff000000000000000000000007.tlbin:vendor/firmware/mcRegistry/ffffffff000000000000000000000007.tlbin
+app/mcRegistry/ffffffff000000000000000000000008.tlbin:vendor/firmware/mcRegistry/ffffffff000000000000000000000008.tlbin
+app/mcRegistry/ffffffff000000000000000000000009.tlbin:vendor/firmware/mcRegistry/ffffffff000000000000000000000009.tlbin
+app/mcRegistry/ffffffff00000000000000000000000a.tlbin:vendor/firmware/mcRegistry/ffffffff00000000000000000000000a.tlbin
+app/mcRegistry/ffffffff00000000000000000000000c.tlbin:vendor/firmware/mcRegistry/ffffffff00000000000000000000000c.tlbin
+app/mcRegistry/ffffffff00000000000000000000000d.tlbin:vendor/firmware/mcRegistry/ffffffff00000000000000000000000d.tlbin
+app/mcRegistry/ffffffff00000000000000000000000e.tlbin:vendor/firmware/mcRegistry/ffffffff00000000000000000000000e.tlbin
+app/mcRegistry/ffffffff00000000000000000000000f.tlbin:vendor/firmware/mcRegistry/ffffffff00000000000000000000000f.tlbin
+app/mcRegistry/ffffffff000000000000000000000010.tlbin:vendor/firmware/mcRegistry/ffffffff000000000000000000000010.tlbin
+app/mcRegistry/ffffffff000000000000000000000011.tlbin:vendor/firmware/mcRegistry/ffffffff000000000000000000000011.tlbin
+app/mcRegistry/ffffffff000000000000000000000012.tlbin:vendor/firmware/mcRegistry/ffffffff000000000000000000000012.tlbin
+app/mcRegistry/ffffffff000000000000000000000013.tlbin:vendor/firmware/mcRegistry/ffffffff000000000000000000000013.tlbin
+app/mcRegistry/ffffffff000000000000000000000017.tlbin:vendor/firmware/mcRegistry/ffffffff000000000000000000000017.tlbin
+app/mcRegistry/ffffffff000000000000000000000018.tlbin:vendor/firmware/mcRegistry/ffffffff000000000000000000000018.tlbin
+app/mcRegistry/ffffffffd00000000000000000000004.tlbin:vendor/firmware/mcRegistry/ffffffffd00000000000000000000004.tlbin
+app/mcRegistry/ffffffffd0000000000000000000000a.tlbin:vendor/firmware/mcRegistry/ffffffffd0000000000000000000000a.tlbin
+app/mcRegistry/ffffffffd0000000000000000000000e.tlbin:vendor/firmware/mcRegistry/ffffffffd0000000000000000000000e.tlbin
+
+bin/scranton_RD
+
 # NFC
 vendor/firmware/bcm2079xB4_firmware.ncd
 vendor/firmware/bcm2079xB4_pre_firmware.ncd
@@ -166,7 +166,6 @@ vendor/firmware/bcm2079xB5_pre_firmware.ncd
 
 # Power
 # lib/hw/power.exynos5.so
-
 
 # Radio
 lib/libaudio-ril.so

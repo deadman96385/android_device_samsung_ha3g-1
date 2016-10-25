@@ -3,35 +3,11 @@ import init.universal5420.wifi.rc
 import init.samsung.rc
 
 on init
-    mkdir /mnt/shell/emulated 0700 shell shell
-    mkdir /mnt/shell/container 0700 system system
-    mkdir /storage 0550 system sdcard_r
-    mkdir /storage/emulated 0555 root root
-
-    #External storage directories
-    mkdir /mnt/media_rw/sdcard1 0700 media_rw media_rw
-    mkdir /storage/usbdisk 0000 system system
-    mkdir /mnt/media_rw/usbdisk 0700 media_rw media_rw
-
-    mkdir /storage/sdcard1 0700 root root
-    mkdir /storage/usbdisk 0700 root root
-
-    export EXTERNAL_STORAGE /storage/emulated/legacy
-    export SECONDARY_STORAGE /storage/sdcard1:/storage/usbdisk
-    export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
-    export EMULATED_STORAGE_TARGET /storage/emulated
+    export LD_SHIM_LIBS "/system/lib/libexynoscamera.so|libsamsung_symbols.so:/system/lib/omx/libOMX.Exynos.WMV.Decoder.so|libsamsung_symbols.so:/system/lib/omx/libOMX.Exynos.MPEG4.Decoder.so|libsamsung_symbols.so:/system/lib/omx/libOMX.Exynos.MPEG4.Encoder.so|libsamsung_symbols.so:/system/lib/omx/libOMX.Exynos.VP8.Encoder.so|libsamsung_symbols.so:/system/lib/omx/libOMX.Exynos.AVC.Encoder.so|libsamsung_symbols.so:/system/lib/omx/libOMX.Exynos.AVC.Decoder.so|libsamsung_symbols.so:/system/lib/omx/libOMX.Exynos.VP8.Decoder.so|libsamsung_symbols.so:/system/bin/gpsd|libdmitry.so"
 
     # Support legacy paths
-    symlink /storage/emulated/legacy /sdcard
-    symlink /storage/emulated/legacy /mnt/sdcard
-    symlink /storage/emulated/legacy /storage/sdcard0
-    symlink /mnt/shell/emulated/0 /storage/emulated/legacy
-    symlink /mnt/shell/container /storage/container
-    symlink /storage/sdcard1 /extSdCard
-    symlink /storage/sdcard1 /mnt/extSdCard
-    symlink /storage/sdcard1 /external_sd
-    symlink /storage/usbdisk /usbdisk
-    symlink /storage/usbdisk /mnt/usbdisk
+    symlink /sdcard /mnt/sdcard
+    symlink /sdcard /storage/sdcard0
 
     symlink /data/app /factory
 
@@ -51,18 +27,13 @@ on early-init
 
 on property:sys.boot_completed=1
     write /sys/block/mmcblk0/queue/scheduler cfq
-
     # Interactive
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor interactive
     write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor interactive
     write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor interactive
     write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor interactive
 
-
 on post-fs-data
-    # we will remap this as /mnt/sdcard with the sdcard fuse tool
-    mkdir /data/media 0770 media_rw media_rw
-    chown media_rw media_rw /data/media
 
     setprop vold.post_fs_data_done 1
 
@@ -113,6 +84,12 @@ on post-fs-data
 # Create directory for hostapd
     mkdir /data/hostapd 0770 system wifi
 
+# Sensorhub service
+service sensorhubservice /system/bin/sensorhubservice
+    class main
+    user system
+    group input
+    
 # Bluetooth dhcpcd config
 service dhcpcd_bt-pan /system/bin/dhcpcd -ABKL
     class main
@@ -138,7 +115,7 @@ on boot
 
     setprop ro.build.product universal_5420
     setprop ro.product.device universal_5420
-
+    chown root radio /proc/cmdline
     chmod 0644 /proc/cmdline
 
 # mobicore
@@ -149,6 +126,7 @@ on boot
     chown system system /dev/mobicore
     chown radio system /dev/mobicore-user
     chown system system /dev/s5p-smem
+    mkdir /system/app/mcRegistry/TbStorage 0775 system system
 
 # DRK permission
     mkdir /efs/prov 0770 radio system
@@ -165,12 +143,12 @@ on boot
     write /efs/prov/ffffffff00000000000000000000000c.tlbin 0
     chown radio system /efs/prov/ffffffff00000000000000000000000c.tlbin
     chmod 0660 /efs/prov/ffffffff00000000000000000000000c.tlbin
+    
 
 # CS socket
     mkdir /dev/socket/cs_socket 0770 system system
 
 # Permissions for TouchScreen
-    chown system radio /sys/class/sec/tsp/cmd
     chown system system /sys/class/input/input1/enabled
     chmod 0660 /sys/class/input/input1/enabled
 
@@ -399,8 +377,8 @@ on boot
     chown system radio /sys/module/cpuidle/parameters/enable_mask
 
 # MTP permission
-    chmod 0660 /dev/usb_mtp_gadget
-    chown system mtp /dev/usb_mtp_gadget
+    chmod 0660 /dev/mtp_usb
+    chown system mtp /dev/mtp_usb
 
 # terminal mode
 #	chmod 0660 /sys/class/android_usb/android0/terminal_version
@@ -430,7 +408,6 @@ on boot
 
 on fs
     mount_all /fstab.universal5420
-    setprop ro.crypto.fuse_sdcard true
 
     chown radio system /efs
     chmod 0771 /efs
@@ -511,28 +488,12 @@ on fs
     chown nfc nfc /data/bcmnfc
     chown nfc nfc /data/bcmnfc/param
 
-# virtual sdcard daemon running as media_rw (1023)
-service sdcard /system/bin/sdcard -u 1023 -g 1023 -l /data/media /mnt/shell/emulated
-    class late_start
-    oneshot
-
-service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -w 1023 /mnt/media_rw/sdcard1 /storage/sdcard1
-    class late_start
-    disabled
-
-service fuse_usbdisk /system/bin/sdcard -u 1023 -g 1023 -w 1023 /mnt/media_rw/usbdisk /storage/usbdisk
-    class late_start
-    disabled
-
-on property:ro.fuse_sdcard=true
-    start sdcard
-
 # Set watchdog timer to 30 seconds and pet it every 10 seconds to get a 20 second margin
 service watchdogd /sbin/watchdogd 10 20
     class core
     seclabel u:r:watchdogd:s0
     disabled
-
+    
 service cpboot-daemon /sbin/cbd -d -txmm626x -bh -mh -p13
     class main
     user root
@@ -545,54 +506,32 @@ on property:ro.debuggable=1
     write /sys/module/fiq_debugger/parameters/kgdb_enable 1
 
 # GPS
-service gpsd /system/bin/gpsd -c /system/etc/gps.xml
-    class main
-    user gps
-    group system inet net_raw
-    ioprio be 0
-    
-# RIL
-#service ril-daemon /system/bin/rild
+#service gpsd /system/bin/gpsd -c /system/etc/gps.xml
 #    class main
-#    socket rild stream 660 root radio
-#    socket rild-debug stream 660 radio system
-#    user root
-#    group radio cache inet misc audio sdcard_r sdcard_rw log
-#    onrestart restart cpboot-daemon
+#    user gps
+#    group system inet net_raw
+#    ioprio be 0
 
-# AT Distributor for factory test
-#service at_distributor /system/bin/at_distributor
-#    class late_start
-#    user root
-#    group radio misc log
-    
 # MobiCore startup
-service mobicore /system/bin/mcDriverDaemon -r /system/app/FFFFFFFF000000000000000000000001.drbin -r /system/app/mcRegistry/ffffffffd0000000000000000000000a.tlbin
-    class core
-    user system
-    group system
-
+#service mobicore /system/bin/mcDriverDaemon -r /system/vendor/firmware/mcRegistry/FFFFFFFF000000000000000000000001.drbin -r /system/vendor/firmware/mcRegistry/ffffffffd0000000000000000000000a.tlbin
+#    class main
+#    user drmrpc
+#    group drmrpc
+    
 service battery_charger /sbin/healthd -c
     class charger
     critical
     
 # service for TZPR provisioning version check app
-service scranton_RD /system/bin/scranton_RD
-     class main
-     user root
-     disabled
-     oneshot
+#service scranton_RD /system/bin/scranton_RD
+#     class main
+#     user root
+#     disabled
+#     oneshot
 
 # start for TZPR provisioning version check app
-on property:sys.mobicoredaemon.enable=true
-    start scranton_RD
-
-# Secure Storage startup
-#service secure_storage /system/bin/secure_storage_daemon
-#    class core
-#    user system
-#    group system
-#    disabled
+#on property:sys.mobicoredaemon.enable=true
+#    start scranton_RD
 
 on property:ro.securestorage.support=true
     mkdir /dev/.secure_storage
@@ -605,34 +544,17 @@ on property:ro.securestorage.support=true
 on property:ro.debug_level=0x4f4c
 	start watchdogd
 
-# bootchecker
-#service bootchecker /system/bin/bootchecker
-#    class late_start
-#    user system
-#    group system log
-#    oneshot
 
 # CS service
-service cs_service /system/bin/cs
-    class main
-    user system
-    group system
-    disabled
+#service cs_service /system/bin/cs
+#    class main
+#    user system
+#    group system
+#    disabled
 
-#service TvoutService_C /system/bin/bintvoutservice
-#     class main
-#     user system
-#     group graphics
-#on property:ro.SecEDS.enable=false
-#    stop TvoutService_C
-
-on property:sys.mobicoredaemon.enable=true
-    start cs_service
-
-# Reactivation lock
-#	service reactived /system/bin/reactived
-#	class late_start
-
+#on property:sys.mobicoredaemon.enable=true
+#    start cs_service
+    
 # Create camera ID file for Exynos camera HAL
 service camera_id /system/bin/sh /system/etc/init.exynos.cam.sh
     class main

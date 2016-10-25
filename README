@@ -1,3 +1,16 @@
 Device configuration for Exynos-based Samsung Galaxy Note 3 (SM-N900, ha3g).
 
 WORK IN PROGRESS.
+
+
+Logs:
+Surface : getSlotFromBufferLocked: unknown buffer:
+libc    : page record for 0xb6bc001c was not found (block_size=16)
+OpenGLRenderer: Use EGL_SWAP_BEHAVIOR_PRESERVED: true
+KernelUidCpuTimeReader: Failed to read uid_cputime: /proc/uid_cputime/show_uid_stat: open failed: ENOENT (No such file or directory)
+
+OMXNodeInstance: getConfig(36:Exynos.avc.dec, ConfigCommonOutputCrop(0x700000f)) ERROR: NotReady(0x80001010)
+
+
+02-29 14:25:27.536  7209  8474 E ion     : ioctl c0084905 failed with code -1: Not a typewriter
+02-29 14:25:27.537  7209  8474 E Exynos_OSAL_Android: ion_import is failed(client:0, fd1:35)
